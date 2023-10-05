@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import toast from "react-hot-toast";
 // END OF IMPORTS
 
 const SignUpForm = () => {
@@ -14,7 +15,18 @@ const SignUpForm = () => {
   });
   const [confirmPasswd, setConfirmPasswd] = useState("");
   const [isBtnDisabale, setIsBtnDisable] = useState(true);
-  const onSignUp = async () => {};
+  const [isLoading, setIsLoading] = useState(false);
+  const onSignUp = async () => {
+    try {
+      setIsLoading(true);
+      const res = await axios.post("/api/users/signup", user);
+      console.log("signup success", res.data);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (
@@ -81,6 +93,9 @@ const SignUpForm = () => {
           isBtnDisabale ? "opacity-40" : ""
         }`}
         disabled={isBtnDisabale}
+        onClick={() => {
+          onSignUp();
+        }}
       >
         SignUp
       </button>
