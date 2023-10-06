@@ -1,16 +1,42 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { NextResponse } from "next/server";
+import toast from "react-hot-toast";
+
 // END OF IMPORTS
 export default function LoginPage() {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+  const [isBtnDisabled, setIsBtnDisabled] = useState(true);
+  const router = useRouter();
+  useEffect(() => {
+    if (user.email.length > 0 && user.password.length > 0) {
+      setIsBtnDisabled(false);
+    }
+  }, [user]);
 
-  const onLogin = async () => {};
+  const onLogin = async () => {
+    try {
+      const response = await axios.post("/api/users/login", user);
+      console.log("Login Success!");
+      toast.success("Login Success");
+      router.push("/profile");
+    } catch (error: any) {
+      console.log("Login Failed!", error.message);
+      toast.error(error.message);
+      return NextResponse.json(
+        {
+          message: error.message,
+        },
+        { status: 400 }
+      );
+    }
+  };
 
   return (
     <div className="flex min-h-screen justify-center items-center flex-col">
@@ -40,7 +66,17 @@ export default function LoginPage() {
           ></input>
         </div>
 
-        <button className="bg-blue-700 p-2 px-4 rounded-md ">Login</button>
+        <button
+          className={`bg-blue-700 p-2 px-4 rounded-md disabled ${
+            isBtnDisabled ? "opacity-40" : ""
+          }`}
+          onClick={() => {
+            onLogin();
+          }}
+          disabled={isBtnDisabled}
+        >
+          Login
+        </button>
         <span className="text-center mt-28 py-5 underline">
           <Link href="/signup">Visit Login Page </Link>
         </span>
