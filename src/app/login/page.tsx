@@ -78,7 +78,7 @@ export default function LoginPage() {
           Login
         </button>
         <span className="text-center mt-28 py-5 underline">
-          <Link href="/signup">Visit Login Page </Link>
+          <Link href="/signup">Visit SignUp Page </Link>
         </span>
       </form>
     </div>

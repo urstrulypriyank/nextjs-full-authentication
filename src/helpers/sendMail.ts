@@ -4,7 +4,7 @@ import bcryptjs from "bcryptjs";
 
 export const sendMail = async ({ email, emailType, userId }: any) => {
   try {
-    User.findOne({email})
+    
 
     const hashedToken = await bcryptjs.hash(userId.toString(), 10);
 
@@ -19,7 +19,7 @@ export const sendMail = async ({ email, emailType, userId }: any) => {
         forgotPasswordTokenExpiry: Date.now() + 3600000,
       });
     }
-    const transport = nodemailer.createTransport({
+    let transport = nodemailer.createTransport({
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,
       auth: {
@@ -27,16 +27,23 @@ export const sendMail = async ({ email, emailType, userId }: any) => {
         pass: process.env.MAIL_SERVER_PASSWORD,
       },
     });
+    console.log(process.env.MAIL_SERVER_ID, "Mail server id");
     const mailOptions = {
-      from: "priyankraiiiii@gmail.com",
+      from: "type2lnct@gmail.com",
       to: email,
       subject:
         emailType === "VERIFY" ? "verify your email" : "Reset Your Password",
       html: `<p>Click <a href="${
         process.env.DOMAIN
-      }/magicklink/${emailType.toString.toLowerCase()}/${hashedToken}">here</a> to ${
+      }/api/magicklink/${emailType.toString.toLowerCase()}/${hashedToken}">here</a> to ${
         emailType === "VERIFY" ? "verify your email" : "Reset Your Password"
-      } </p>`,
+      }
+      </br>
+        OR Type in browser
+        ${
+          process.env.DOMAIN
+        }/api/magicklink/${emailType.toString.toLowerCase()}/${hashedToken}
+      </p>`,
     };
     const mailResponse = await transport.sendMail(mailOptions);
     return mailResponse;

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sendMail } from "./helpers/sendMail";
 
 export function middleware(request: NextRequest) {
   try {

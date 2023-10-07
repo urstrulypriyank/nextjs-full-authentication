@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
     // is password correct
-    const isPasswordSame = bycrptjs.compare(password, user.password);
+    const isPasswordSame = await bycrptjs.compare(password, user.password);
     if (!isPasswordSame) {
       return NextResponse.json(
         {

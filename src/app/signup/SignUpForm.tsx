@@ -22,6 +22,7 @@ const SignUpForm = () => {
       const res = await axios.post("/api/users/signup", user);
       console.log("signup success", res.data);
     } catch (error: any) {
+      console.log(error.message);
       toast.error(error.message);
     } finally {
       setIsLoading(false);
@@ -101,7 +102,7 @@ const SignUpForm = () => {
       </button>
 
       <span className="text-center mt-28 py-5 underline">
-        <Link href="/login">Visit Signup Page</Link>
+        <Link href="/login">Visit LogIn Page</Link>
       </span>
     </form>
   );
