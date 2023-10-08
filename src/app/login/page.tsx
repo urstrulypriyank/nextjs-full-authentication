@@ -70,16 +70,19 @@ export default function LoginPage() {
           className={`bg-blue-700 p-2 px-4 rounded-md disabled ${
             isBtnDisabled ? "opacity-40" : ""
           }`}
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             onLogin();
           }}
           disabled={isBtnDisabled}
         >
           Login
         </button>
-        <span className="text-center mt-28 py-5 underline">
+        <div className="  !flex !flex-row !justify-around [&>*]:underline">
           <Link href="/signup">Visit SignUp Page </Link>
-        </span>
+
+          <Link href="/signup">Forgot Passwrod</Link>
+        </div>
       </form>
     </div>
   );

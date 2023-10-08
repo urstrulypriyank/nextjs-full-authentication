@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbconfig";
 import User from "@/models/userModel";
-connect();
-export async function GET(request: NextRequest) {
-  try {
-    const reqBody = await request.json();
 
-    const token = await reqBody.token;
+export async function GET(request, context) {
+  try {
+    // const reqBody = await request.json();
+  const { params } = context;
+
+    const token = params.token;
     console.log(token);
-    const user = User.findOne({
+    const user = await User.findOne({
       verifyToke: token,
       verifyTokenExpiry: { $gt: Date.now() },
     });
@@ -19,8 +20,8 @@ export async function GET(request: NextRequest) {
     user.verifyToke = undefined;
     user.verifyTokenExpiry = undefined;
     await user.save();
-    return NextResponse.redirect("/login");
-  } catch (error: any) {
+    return NextResponse.redirect(new URL("/redirect/profile", request.url));
+  } catch (error) {
     return NextResponse.json(
       {
         error: error.message,

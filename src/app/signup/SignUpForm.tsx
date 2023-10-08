@@ -22,7 +22,7 @@ const SignUpForm = () => {
       const res = await axios.post("/api/users/signup", user);
       console.log("signup success", res.data);
     } catch (error: any) {
-      console.log(error.message);
+      console.log(error.message); 
       toast.error(error.message);
     } finally {
       setIsLoading(false);
@@ -94,7 +94,8 @@ const SignUpForm = () => {
           isBtnDisabale ? "opacity-40" : ""
         }`}
         disabled={isBtnDisabale}
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
           onSignUp();
         }}
       >

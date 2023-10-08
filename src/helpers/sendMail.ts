@@ -4,8 +4,6 @@ import bcryptjs from "bcryptjs";
 
 export const sendMail = async ({ email, emailType, userId }: any) => {
   try {
-    
-
     const hashedToken = await bcryptjs.hash(userId.toString(), 10);
 
     if (emailType === "VERIFY") {
@@ -27,22 +25,22 @@ export const sendMail = async ({ email, emailType, userId }: any) => {
         pass: process.env.MAIL_SERVER_PASSWORD,
       },
     });
-    console.log(process.env.MAIL_SERVER_ID, "Mail server id");
+    
     const mailOptions = {
       from: "type2lnct@gmail.com",
       to: email,
       subject:
         emailType === "VERIFY" ? "verify your email" : "Reset Your Password",
-      html: `<p>Click <a href="${
-        process.env.DOMAIN
-      }/api/magicklink/${emailType.toString.toLowerCase()}/${hashedToken}">here</a> to ${
+      html: `<p>Click <a href="${process.env.DOMAIN}/api/magicklink/${emailType
+        .toString()
+        .toLowerCase()}/${hashedToken}">here</a> to ${
         emailType === "VERIFY" ? "verify your email" : "Reset Your Password"
       }
       </br>
         OR Type in browser
-        ${
-          process.env.DOMAIN
-        }/api/magicklink/${emailType.toString.toLowerCase()}/${hashedToken}
+        ${process.env.DOMAIN}/api/magicklink/${emailType
+        .toString()
+        .toLowerCase()}/${hashedToken}
       </p>`,
     };
     const mailResponse = await transport.sendMail(mailOptions);

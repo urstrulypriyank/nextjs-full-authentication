@@ -3,6 +3,7 @@ import { connect } from "@/dbConfig/dbconfig";
 import bycrptjs from "bcryptjs";
 import User from "@/models/userModel";
 import jwt from "jsonwebtoken";
+import { sendMail } from "@/helpers/sendMail";
 // import ends
 connect();
 export async function POST(request: NextRequest) {
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     // check if user exist
     const user = await User.findOne({ email });
-    console.log("after user", user);
+
     // does user exist
     if (!user) {
       return NextResponse.json(
@@ -39,6 +40,11 @@ export async function POST(request: NextRequest) {
     const token = jwt.sign(tokenData, process.env.JWT_SECRET!, {
       expiresIn: "1d",
     });
+    // if is user is not verified
+    if (!user.isVerified) {
+      sendMail({ email, emailType: "VERIFY", userId: user._id });
+      return NextResponse.redirect(new URL("/", request.nextUrl));
+    }
     const res = NextResponse.json({
       message: "Login Sucessfull!",
       success: true,
